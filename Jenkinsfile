@@ -1,22 +1,21 @@
 pipeline {
     agent {
         docker {
-            image 'node:alpine'
-            args '-p 3000:3000 -p 5000:5000'
+            image 'docker'
         }
     }
     environment {
         CI = 'true'
     }
     stages {
-        stage('Build') {
-            steps {
-                sh 'myke build'
-            }
-        }
         stage('Test') {
             steps {
-                sh 'myke test'
+                sh 'test.sh'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'build.sh'
             }
         }
         stage('Deliver for development') {
@@ -24,7 +23,7 @@ pipeline {
                 branch 'development' 
             }
             steps {
-                sh 'myke deploy'
+                sh 'deploy.sh dev'
             }
         }
         stage('Deploy for production') {
@@ -32,7 +31,7 @@ pipeline {
                 branch 'production'  
             }
             steps {
-                sh 'myke deploy --env=prod'
+                sh 'deploy.sh prod'
             }
         }
     }
