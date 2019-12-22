@@ -1,0 +1,49 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ .PROJECT_NAME }}
+  namespace: {{ .NAMESPACE }}
+spec:
+  schedule: "0 0 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          name: {{ .PROJECT_NAME }}
+        spec:
+          restartPolicy: "Never"
+          containers:
+          - name: {{ .PROJECT_NAME }}
+            image: us.gcr.io/certain-horizon-183311/comexport/{{ .PROJECT_NAME }}:{{ .GIT_COMMIT }}
+            imagePullPolicy: Always
+            env:
+            - name: PROJECT_NAME
+              value: {{ .PROJECT_NAME }}
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /etc/app/google-service-account.json
+            - name: PROJECT_ID
+              value: {{ .PROJECT_ID }}
+            - name: SOURCE_BUCKET_NAME
+              value: {{ .SOURCE_BUCKET_NAME }}
+            - name: ARCHIVE_BUCKET_NAME
+              value: {{ .ARCHIVE_BUCKET_NAME }}
+            - name: DAYS_TO_RETAIN
+              value: "{{ .DAYS_TO_RETAIN }}"
+            volumeMounts:
+            - name: service-account-config
+              mountPath: /etc/app
+              readOnly: true
+            resources:
+              limits:
+                memory: 1024Mi
+              requests:
+                memory: 512Mi
+          imagePullSecrets:
+          - name: registry-secret
+          volumes:
+          - name: service-account-config
+            secret:
+              secretName: {{ .PROJECT_NAME }}-key
