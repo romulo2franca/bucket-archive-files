@@ -17,7 +17,7 @@ spec:
           restartPolicy: "Never"
           containers:
           - name: {{ .PROJECT_NAME }}
-            image: us.gcr.io/certain-horizon-183311/comexport/{{ .PROJECT_NAME }}:{{ .GIT_COMMIT }}
+            image: "{{ .REPO_URL }}/{{ .PROJECT_NAME }}:{{ .GIT_COMMIT }}"
             imagePullPolicy: Always
             env:
             - name: PROJECT_NAME
@@ -46,4 +46,4 @@ spec:
           volumes:
           - name: service-account-config
             secret:
-              secretName: {{ .PROJECT_NAME }}-key
+              secretName: "{{ .PROJECT_NAME }}-key"

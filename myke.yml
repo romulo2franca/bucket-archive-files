@@ -14,3 +14,12 @@ tasks:
     cmd: bin/run.sh
   deploy:
     cmd: bin/deploy.sh {{ .env | default "stage" }}
+
+tags:
+  - infra
+
+tasks:
+  create-namespaces:
+    cmd: bin/create-namespaces.sh
+  install-jenkins:
+    cmd: bin/install-jenkins.sh
