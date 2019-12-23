@@ -80,7 +80,7 @@ spec:
       }
       stage('Publish') {
         when {
-          branch 'development' || 'master' || 'production' 
+          branch 'master' 
         }
         steps{
           dir("${PROJECT_NAME}") {
