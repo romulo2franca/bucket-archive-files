@@ -39,7 +39,8 @@
 
 podTemplate(label: 'jenkins-build-node', containers: [
     containerTemplate(name: 'git', image: 'alpine/git', ttyEnabled: true, command: 'cat'),
-    containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true)
+    containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
+    containerTemplate(name: 'node', image: 'node:alpine', ttyEnabled: true, command: 'cat'),
   ],
   volumes: [
     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
@@ -51,8 +52,7 @@ podTemplate(label: 'jenkins-build-node', containers: [
         dir('bucket-archive-files/scripts') {
           sh 'ls'
           sh './test.sh'
-        }
-
+      }
     }
     // stage('Build') {
     //   dir("scripts") {
