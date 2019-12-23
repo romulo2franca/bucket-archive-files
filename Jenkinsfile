@@ -8,7 +8,7 @@ metadata:
 spec:
   containers:
   - name: git
-    image: alpine/git
+    image: alpine/git:latest
     command:
     - cat
     tty: true
@@ -17,7 +17,7 @@ spec:
       name: "volume-0"
       readOnly: false
   - name: docker
-    image: docker
+    image: docker:latest
     command:
     - cat
     tty: true
@@ -35,7 +35,7 @@ spec:
       name: "volume-0"
       readOnly: false
   - name: kube
-    image: bitnami/kube
+    image: bitnami/kubectl:latest
     command:
     - cat
     tty: true
