@@ -52,7 +52,7 @@ podTemplate(label: 'jenkins-build-node', containers: [
         REPO_URL = 'romulo2franca'
     }
     stage('Checkout') {
-        sh "git clone -b ${BRANCH_NAME} https://github.com/${REPO_URL}/${PROJECT_NAME}.git"
+        sh "git clone -b ${BRANCH_NAME} https://github.com/${env.REPO_URL}/${env.PROJECT_NAME}.git"
         dir(${PROJECT_NAME}) {
           sh "GIT_COMMIT=\$(git rev-parse --short HEAD)"
         }
