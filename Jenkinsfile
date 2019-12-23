@@ -47,11 +47,9 @@ podTemplate(label: 'jenkins-build-node', containers: [
   ) {
   node('jenkins-build-node') {
     stage('Test') {
-      dir("scripts") {
-        sh 'cat test.sh'
+        sh 'ls'
         // sh ''
         // sh 'test.sh'
-      }
     }
     stage('Build') {
       dir("scripts") {
