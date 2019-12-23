@@ -140,7 +140,7 @@ spec:
     //         sh "GIT_COMMIT=\$(git rev-parse --short HEAD)"
     //       }
     //   }
-      }
+      // }
       stage('Test') {
         steps{
           dir("${PROJECT_NAME}") {
