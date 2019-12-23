@@ -1,5 +1,3 @@
 set -e
 
-yarn install
-
-yarn test
+yarn install && yarn test
