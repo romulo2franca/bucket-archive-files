@@ -56,15 +56,10 @@ podTemplate(label: 'jenkins-build-node', containers: [
       container('node') {
         dir('bucket-archive-files/scripts') {
           sh 'ls'
-          sh './test.sh'
+          // sh './test.sh'
         }
       }
     }
-    // stage('Build') {
-    //   dir("scripts") {
-    //     sh 'build.sh'
-    //   }
-    // }
     stage('Check running containers') {
       container('docker') {
         // example to show you can run docker commands when you mount the socket
