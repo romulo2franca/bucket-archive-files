@@ -118,7 +118,7 @@ spec:
       }
       steps{
         dir("${PROJECT_NAME}") {
-          container('docker') {
+          container('kubectl') {
             sh './scripts/deploy.sh dev'
           }
         }
@@ -130,7 +130,7 @@ spec:
       }
       steps{
         dir("${PROJECT_NAME}") {
-          container('docker') {
+          container('kubectl') {
             sh './scripts/deploy.sh stage'
           }
         }
@@ -142,7 +142,7 @@ spec:
       }
       steps{
         dir("${PROJECT_NAME}") {
-          container('docker') {
+          container('kubectl') {
             sh './scripts/deploy.sh prod'
           }
         }
