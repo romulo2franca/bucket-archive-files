@@ -83,7 +83,7 @@ spec:
           branch 'development' || 'master' || 'production' 
         }
         steps{
-          dir(${${PROJECT_NAME}}) {
+          dir("${PROJECT_NAME}") {
             container('docker') {
               sh './scripts/publish.sh'
             }
@@ -95,7 +95,7 @@ spec:
           branch 'development' 
         }
         steps{
-          dir(${${PROJECT_NAME}}) {
+          dir("${PROJECT_NAME}") {
             container('docker') {
               sh './scripts/deploy.sh dev'
             }
@@ -107,7 +107,7 @@ spec:
           branch 'master' 
         }
         steps{
-          dir(${${PROJECT_NAME}}) {
+          dir("${PROJECT_NAME}") {
             container('docker') {
               sh './scripts/deploy.sh stage'
             }
@@ -119,7 +119,7 @@ spec:
           branch 'production' 
         }
         steps{
-          dir(${${PROJECT_NAME}}) {
+          dir("${PROJECT_NAME}") {
             container('docker') {
               sh './scripts/deploy.sh prod'
             }
