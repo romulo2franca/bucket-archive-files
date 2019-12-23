@@ -66,7 +66,7 @@ podTemplate(label: 'jenkins-build-node', containers: [
     }
     stage('Build') {
       when {
-        branch 'master' || branch 'development' || branch 'production' 
+        branch 'master' || 'development' || 'production' 
       }
       dir(${PROJECT_NAME}) {
         container('docker') {
@@ -76,7 +76,7 @@ podTemplate(label: 'jenkins-build-node', containers: [
     }
     stage('Publish') {
       when {
-        branch 'master' || branch 'development' || branch 'production' 
+        branch 'master' || 'development' || 'production' 
       }
       dir(${PROJECT_NAME}) {
         container('docker') {
