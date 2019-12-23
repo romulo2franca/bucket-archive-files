@@ -47,17 +47,13 @@ podTemplate(label: 'jenkins-build-node', containers: [
   ) {
   node('jenkins-build-node') {
     stage('Test') {
-      steps {
-        dir("scripts") {
-          sh 'test.sh'
-        }
+      dir("scripts") {
+        sh 'test.sh'
       }
     }
     stage('Build') {
-      steps {
-        dir("scripts") {
-          sh 'build.sh'
-        }
+      dir("scripts") {
+        sh 'build.sh'
       }
     }
     stage('Check running containers') {
