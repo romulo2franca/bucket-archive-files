@@ -37,6 +37,10 @@
 //     }
 // }
 
+environment {
+    PROJECT_NAME = 'bucket-archive-files'
+    REPO_URL = 'romulo2franca'
+}
 podTemplate(label: 'jenkins-build-node', containers: [
     containerTemplate(name: 'git', image: 'alpine/git', ttyEnabled: true, command: 'cat'),
     containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
@@ -47,18 +51,14 @@ podTemplate(label: 'jenkins-build-node', containers: [
   ]
   ) {
   node('jenkins-build-node') {
-    environment {
-        PROJECT_NAME = 'bucket-archive-files'
-        REPO_URL = 'romulo2franca'
-    }
     stage('Checkout') {
         sh "git clone -b ${BRANCH_NAME} https://github.com/${env.REPO_URL}/${env.PROJECT_NAME}.git"
-        dir(${PROJECT_NAME}) {
+        dir(${env.PROJECT_NAME}) {
           sh "GIT_COMMIT=\$(git rev-parse --short HEAD)"
         }
     }
     stage('Test') {
-      dir(${PROJECT_NAME}) {
+      dir(${env.PROJECT_NAME}) {
         container('node') {
           sh './scripts/test.sh'
         }
@@ -68,7 +68,7 @@ podTemplate(label: 'jenkins-build-node', containers: [
       when {
         branch 'master' || 'development' || 'production' 
       }
-      dir(${PROJECT_NAME}) {
+      dir(${env.PROJECT_NAME}) {
         container('docker') {
           sh './scripts/build.sh'
         }
@@ -78,7 +78,7 @@ podTemplate(label: 'jenkins-build-node', containers: [
       when {
         branch 'master' || 'development' || 'production' 
       }
-      dir(${PROJECT_NAME}) {
+      dir(${env.PROJECT_NAME}) {
         container('docker') {
           sh './scripts/publish.sh'
         }
