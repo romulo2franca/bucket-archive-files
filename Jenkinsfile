@@ -142,9 +142,11 @@ spec:
       }
       }
       stage('Test') {
-        dir("${PROJECT_NAME}") {
-          container('node') {
-            sh './scripts/test.sh'
+        steps{
+          dir("${PROJECT_NAME}") {
+            container('node') {
+              sh './scripts/test.sh'
+            }
           }
         }
       }
@@ -152,9 +154,11 @@ spec:
         when {
           branch 'master'
         }
-        dir("${PROJECT_NAME}") {
-          container('docker') {
-            sh './scripts/build.sh'
+        steps {
+          dir("${PROJECT_NAME}") {
+            container('docker') {
+              sh './scripts/build.sh'
+            }
           }
         }
       }
