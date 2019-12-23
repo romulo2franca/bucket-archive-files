@@ -45,37 +45,35 @@ podTemplate(label: 'jenkins-build-node', containers: [
     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
   ]
   ) {
-    node('jenkins-build-node') {
-      stages{
-        stage('Test') {
-          steps {
-            dir("scripts") {
-              sh 'test.sh'
-            }
-          }
+  node('jenkins-build-node') {
+    stage('Test') {
+      steps {
+        dir("scripts") {
+          sh 'test.sh'
         }
-        stage('Build') {
-          steps {
-            dir("scripts") {
-              sh 'build.sh'
-            }
-          }
+      }
+    }
+    stage('Build') {
+      steps {
+        dir("scripts") {
+          sh 'build.sh'
         }
-        stage('Check running containers') {
-          container('docker') {
-            // example to show you can run docker commands when you mount the socket
-            sh 'hostname'
-            sh 'hostname -i'
-            sh 'docker ps'
-          }
-        }
-        stage('Clone repository') {
-          container('git') {
-            sh 'whoami'
-            sh 'hostname -i'
-            sh 'git clone -b master https://github.com/lvthillo/hello-world-war.git'
-          }
-        }
+      }
+    }
+    stage('Check running containers') {
+      container('docker') {
+        // example to show you can run docker commands when you mount the socket
+        sh 'hostname'
+        sh 'hostname -i'
+        sh 'docker ps'
+      }
+    }
+    stage('Clone repository') {
+      container('git') {
+        sh 'whoami'
+        sh 'hostname -i'
+        sh 'git clone -b master https://github.com/lvthillo/hello-world-war.git'
+      }
     }
   }
 }
