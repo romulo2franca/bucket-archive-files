@@ -37,10 +37,6 @@
 //     }
 // }
 
-environment {
-    PROJECT_NAME = 'bucket-archive-files'
-    REPO_URL = 'romulo2franca'
-}
 podTemplate(label: 'jenkins-build-node', containers: [
     containerTemplate(name: 'git', image: 'alpine/git', ttyEnabled: true, command: 'cat'),
     containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
@@ -50,6 +46,10 @@ podTemplate(label: 'jenkins-build-node', containers: [
     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
   ]
   ) {
+  environment {
+      PROJECT_NAME = 'bucket-archive-files'
+      REPO_URL = 'romulo2franca'
+  }
   node('jenkins-build-node') {
     stage('Checkout') {
         sh "git clone -b ${BRANCH_NAME} https://github.com/${env.REPO_URL}/${env.PROJECT_NAME}.git"
