@@ -52,11 +52,10 @@ podTemplate(label: 'jenkins-build-node', containers: [
     }
     stage('Build') {
       dir('bucket-archive-files') {
-        container('docker') {
-
-        sh './scripts/build.sh'
+        container('node') {
+        sh './scripts/test.sh'
+        // sh './scripts/build.sh'
         }
-        // sh './scripts/test.sh'
       }
     }
     stage('Check running containers') {
