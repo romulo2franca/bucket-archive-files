@@ -35,7 +35,7 @@ spec:
       name: "volume-0"
       readOnly: false
   - name: kube
-    image: romulo2franca/envsubst
+    image: romulo2franca/kubectl
     command:
     - cat
     tty: true
@@ -68,43 +68,43 @@ spec:
           }
       }
       }
-    // stage('Test') {
-    //   steps{
-    //     dir("${PROJECT_NAME}") {
-    //       container('node') {
-    //         sh './scripts/test.sh'
-    //       }
-    //     }
-    //   }
-    // }
-    // stage('Build') {
-    //   when {
-    //     branch 'master'
-    //   }
-    //   steps {
-    //     dir("${PROJECT_NAME}") {
-    //       container('docker') {
-    //         sh './scripts/build.sh'
-    //       }
-    //     }
-    //   }
-    // }
-    // stage('Publish') {
-    //   when {
-    //     branch 'master' 
-    //   }
-    //   steps{
-    //     dir("${PROJECT_NAME}") {
-    //       container('docker') {
-    //         script{
-    //           docker.withRegistry('', "${DOCKER_REPO_CREDENTIAL}") {
-    //             sh './scripts/publish.sh'
-    //           }
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
+    stage('Test') {
+      steps{
+        dir("${PROJECT_NAME}") {
+          container('node') {
+            sh './scripts/test.sh'
+          }
+        }
+      }
+    }
+    stage('Build') {
+      when {
+        branch 'master'
+      }
+      steps {
+        dir("${PROJECT_NAME}") {
+          container('docker') {
+            sh './scripts/build.sh'
+          }
+        }
+      }
+    }
+    stage('Publish') {
+      when {
+        branch 'master' 
+      }
+      steps{
+        dir("${PROJECT_NAME}") {
+          container('docker') {
+            script{
+              docker.withRegistry('', "${DOCKER_REPO_CREDENTIAL}") {
+                sh './scripts/publish.sh'
+              }
+            }
+          }
+        }
+      }
+    }
     stage('Test in Dev') {
       when {
         branch 'development' 
