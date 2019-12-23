@@ -52,7 +52,7 @@ podTemplate(label: 'jenkins-build-node', containers: [
     }
     stage('Build') {
       dir('bucket-archive-files') {
-        sh './scripts/test.sh'
+        // sh './scripts/test.sh'
         sh './scripts/build.sh'
       }
     }
