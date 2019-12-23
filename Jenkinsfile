@@ -52,13 +52,15 @@ podTemplate(label: 'jenkins-build-node', containers: [
   }
   node('jenkins-build-node') {
     stage('Checkout') {
-        sh "git clone -b ${BRANCH_NAME} https://github.com/${env.REPO_URL}/${env.PROJECT_NAME}.git"
-        dir(${env.PROJECT_NAME}) {
+        print(env.PROJECT_NAME)
+        sh "echo ${PROJECT_NAME}"
+        sh "git clone -b ${BRANCH_NAME} https://github.com/romulo2franca/bucket-archive-files.git"
+        dir(env.PROJECT_NAME) {
           sh "GIT_COMMIT=\$(git rev-parse --short HEAD)"
         }
     }
     stage('Test') {
-      dir(${env.PROJECT_NAME}) {
+      dir(env.PROJECT_NAME) {
         container('node') {
           sh './scripts/test.sh'
         }
@@ -68,7 +70,7 @@ podTemplate(label: 'jenkins-build-node', containers: [
       when {
         branch 'master' || 'development' || 'production' 
       }
-      dir(${env.PROJECT_NAME}) {
+      dir(env.PROJECT_NAME) {
         container('docker') {
           sh './scripts/build.sh'
         }
