@@ -134,37 +134,39 @@ spec:
   }
   stages{
     stage('Checkout') {
+      steps{
           sh "git clone -b ${BRANCH_NAME} https://github.com/${REPO_URL}/${PROJECT_NAME}.git"
           dir(${PROJECT_NAME}) {
             sh "GIT_COMMIT=\$(git rev-parse --short HEAD)"
           }
       }
-      stage('Test') {
-        dir(${PROJECT_NAME}) {
-          container('node') {
-            sh './scripts/test.sh'
-          }
-        }
       }
-      stage('Build') {
-        when {
-          branch 'master'
-        }
-        dir(${PROJECT_NAME}) {
-          container('docker') {
-            sh './scripts/build.sh'
-          }
-        }
-      }
-      stage('Publish') {
-        when {
-          branch 'master' || 'development' || 'production' 
-        }
-        dir(${${PROJECT_NAME}}) {
-          container('docker') {
-            sh './scripts/publish.sh'
-          }
-        }
-      }
+      // stage('Test') {
+      //   dir(${PROJECT_NAME}) {
+      //     container('node') {
+      //       sh './scripts/test.sh'
+      //     }
+      //   }
+      // }
+      // stage('Build') {
+      //   when {
+      //     branch 'master'
+      //   }
+      //   dir(${PROJECT_NAME}) {
+      //     container('docker') {
+      //       sh './scripts/build.sh'
+      //     }
+      //   }
+      // }
+      // stage('Publish') {
+      //   when {
+      //     branch 'master' || 'development' || 'production' 
+      //   }
+      //   dir(${${PROJECT_NAME}}) {
+      //     container('docker') {
+      //       sh './scripts/publish.sh'
+      //     }
+      //   }
+      // }
     }
   }
