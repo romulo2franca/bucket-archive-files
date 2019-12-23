@@ -46,43 +46,46 @@ podTemplate(label: 'jenkins-build-node', containers: [
     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
   ]
   ) {
-  environment {
-      PROJECT_NAME = 'bucket-archive-files'
-      REPO_URL = 'romulo2franca'
-  }
   node('jenkins-build-node') {
-    stage('Checkout') {
-        print(env.PROJECT_NAME)
-        sh "echo ${PROJECT_NAME}"
-        sh "git clone -b ${BRANCH_NAME} https://github.com/romulo2franca/bucket-archive-files.git"
-        dir(env.PROJECT_NAME) {
-          sh "GIT_COMMIT=\$(git rev-parse --short HEAD)"
+    pipeline {
+      environment {
+          PROJECT_NAME = 'bucket-archive-files'
+          REPO_URL = 'romulo2franca'
+      }
+      stages{
+        stage('Checkout') {
+            sh "echo ${env.PROJECT_NAME}"
+            sh "git clone -b ${BRANCH_NAME} https://github.com/romulo2franca/bucket-archive-files.git"
+            dir(env.PROJECT_NAME) {
+              sh "GIT_COMMIT=\$(git rev-parse --short HEAD)"
+            }
         }
-    }
-    stage('Test') {
-      dir(env.PROJECT_NAME) {
-        container('node') {
-          sh './scripts/test.sh'
+        stage('Test') {
+          dir(env.PROJECT_NAME) {
+            container('node') {
+              sh './scripts/test.sh'
+            }
+          }
         }
-      }
-    }
-    stage('Build') {
-      when {
-        branch 'master' || 'development' || 'production' 
-      }
-      dir(env.PROJECT_NAME) {
-        container('docker') {
-          sh './scripts/build.sh'
+        stage('Build') {
+          when {
+            branch 'master' || 'development' || 'production' 
+          }
+          dir(env.PROJECT_NAME) {
+            container('docker') {
+              sh './scripts/build.sh'
+            }
+          }
         }
-      }
-    }
-    stage('Publish') {
-      when {
-        branch 'master' || 'development' || 'production' 
-      }
-      dir(${env.PROJECT_NAME}) {
-        container('docker') {
-          sh './scripts/publish.sh'
+        stage('Publish') {
+          when {
+            branch 'master' || 'development' || 'production' 
+          }
+          dir(${env.PROJECT_NAME}) {
+            container('docker') {
+              sh './scripts/publish.sh'
+            }
+          }
         }
       }
     }
