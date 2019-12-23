@@ -16,7 +16,6 @@ spec:
     - mountPath: "/var/run/docker.sock"
       name: "volume-0"
       readOnly: false
-
   - name: docker
     image: docker
     command:
@@ -35,24 +34,8 @@ spec:
     - mountPath: "/var/run/docker.sock"
       name: "volume-0"
       readOnly: false
-  volumes:
-  - name: "volume-0"
-    hostPath:
-      path: "/var/run/docker.sock"
-  - name: "workspace-volume"
-    emptyDir:
-      medium: ""
   - name: kube
     image: bitnami/kube
-    command:
-    - cat
-    tty: true
-    volumeMounts:
-    - mountPath: "/var/run/docker.sock"
-      name: "volume-0"
-      readOnly: false
-  - name: node
-    image: node:alpine
     command:
     - cat
     tty: true
