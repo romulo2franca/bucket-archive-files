@@ -1,0 +1,10 @@
+env/
+infra/
+scripts/
+test/
+.git
+.gitignore
+.cache
+Dockerfile
+Jenkinsfile
+README.md
