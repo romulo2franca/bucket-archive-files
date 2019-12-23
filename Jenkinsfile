@@ -50,7 +50,7 @@ podTemplate(label: 'jenkins-build-node', containers: [
     withEnv(['PROJECT_NAME=bucket-archive-files','REPO_URL=romulo2franca']) {
       stage('Checkout') {
           print(PROJECT_NAME)
-          sh "git clone -b ${BRANCH_NAME} https://github.com/${REPO_URL}/|${PROJECT_NAME}.git"
+          sh "git clone -b ${BRANCH_NAME} https://github.com/${REPO_URL}/${PROJECT_NAME}.git"
           dir(PROJECT_NAME) {
             sh "GIT_COMMIT=\$(git rev-parse --short HEAD)"
           }
