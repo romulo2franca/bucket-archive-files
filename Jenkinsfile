@@ -37,54 +37,48 @@
 //     }
 // }
 
-pipeline {
-  environment {
-      PROJECT_NAME = 'bucket-archive-files'
-      REPO_URL = 'romulo2franca'
-  }
-  podTemplate(label: 'jenkins-build-node', containers: [
-      containerTemplate(name: 'git', image: 'alpine/git', ttyEnabled: true, command: 'cat'),
-      containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
-      containerTemplate(name: 'node', image: 'node:alpine', ttyEnabled: true, command: 'cat'),
-    ],
-    volumes: [
-      hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
-    ]
-    ) {
-    node('jenkins-build-node') {
-      stages{
-        stage('Checkout') {
-            sh "echo ${env.PROJECT_NAME}"
-            sh "git clone -b ${BRANCH_NAME} https://github.com/romulo2franca/bucket-archive-files.git"
-            dir(env.PROJECT_NAME) {
-              sh "GIT_COMMIT=\$(git rev-parse --short HEAD)"
-            }
-        }
-        stage('Test') {
-          dir(env.PROJECT_NAME) {
-            container('node') {
-              sh './scripts/test.sh'
-            }
+podTemplate(label: 'jenkins-build-node', containers: [
+    containerTemplate(name: 'git', image: 'alpine/git', ttyEnabled: true, command: 'cat'),
+    containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
+    containerTemplate(name: 'node', image: 'node:alpine', ttyEnabled: true, command: 'cat'),
+  ],
+  volumes: [
+    hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
+  ]
+  ) {
+  node('jenkins-build-node') {
+    withEnv(['PROJECT_NAME=bucket-archive-files','REPO_URL=romulo2franca']) {
+      stage('Checkout') {
+          print(PROJECT_NAME)
+          sh "git clone -b ${BRANCH_NAME} https://github.com/${REPO_URL}/|${PROJECT_NAME}.git"
+          dir(PROJECT_NAME) {
+            sh "GIT_COMMIT=\$(git rev-parse --short HEAD)"
+          }
+      }
+      stage('Test') {
+        dir(PROJECT_NAME) {
+          container('node') {
+            sh './scripts/test.sh'
           }
         }
-        stage('Build') {
-          when {
-            branch 'master' || 'development' || 'production' 
-          }
-          dir(env.PROJECT_NAME) {
-            container('docker') {
-              sh './scripts/build.sh'
-            }
+      }
+      stage('Build') {
+        when {
+          branch 'master' || 'development' || 'production' 
+        }
+        dir(PROJECT_NAME) {
+          container('docker') {
+            sh './scripts/build.sh'
           }
         }
-        stage('Publish') {
-          when {
-            branch 'master' || 'development' || 'production' 
-          }
-          dir(${env.PROJECT_NAME}) {
-            container('docker') {
-              sh './scripts/publish.sh'
-            }
+      }
+      stage('Publish') {
+        when {
+          branch 'master' || 'development' || 'production' 
+        }
+        dir(${PROJECT_NAME}) {
+          container('docker') {
+            sh './scripts/publish.sh'
           }
         }
       }
