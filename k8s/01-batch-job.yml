@@ -17,7 +17,7 @@ spec:
           restartPolicy: "Never"
           containers:
           - name: ${PROJECT_NAME}
-            image: "${REPO_URL}/${PROJECT_NAME}:${GIT_COMMIT}"
+            image: "${DOCKER_REPO_URL}/${PROJECT_NAME}:${GIT_COMMIT}"
             imagePullPolicy: Always
             env:
             - name: PROJECT_NAME
