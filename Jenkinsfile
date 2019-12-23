@@ -42,17 +42,17 @@ pipeline {
       PROJECT_NAME = 'bucket-archive-files'
       REPO_URL = 'romulo2franca'
   }
-  stages{
-    podTemplate(label: 'jenkins-build-node', containers: [
-        containerTemplate(name: 'git', image: 'alpine/git', ttyEnabled: true, command: 'cat'),
-        containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
-        containerTemplate(name: 'node', image: 'node:alpine', ttyEnabled: true, command: 'cat'),
-      ],
-      volumes: [
-        hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
-      ]
-      ) {
-      node('jenkins-build-node') {
+  podTemplate(label: 'jenkins-build-node', containers: [
+      containerTemplate(name: 'git', image: 'alpine/git', ttyEnabled: true, command: 'cat'),
+      containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
+      containerTemplate(name: 'node', image: 'node:alpine', ttyEnabled: true, command: 'cat'),
+    ],
+    volumes: [
+      hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
+    ]
+    ) {
+    node('jenkins-build-node') {
+      stages{
         stage('Checkout') {
             sh "echo ${env.PROJECT_NAME}"
             sh "git clone -b ${BRANCH_NAME} https://github.com/romulo2franca/bucket-archive-files.git"
