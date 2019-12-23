@@ -2,8 +2,8 @@ set -e
 
 environment=${1}
 
-for line in $(cat ../env/${1}.env); do
+for line in $(cat ./env/${1}.env); do
   export ${line}
 done
 
-cat ../k8s/01-batch-job.yml | envsubst | kubectl apply -f -
+cat ./k8s/01-batch-job.yml | envsubst
