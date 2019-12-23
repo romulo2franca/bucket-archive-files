@@ -133,13 +133,13 @@ spec:
     PROJECT_NAME = 'bucket-archive-files'
   }
   stages{
-    stage('Checkout') {
-      steps{
-          sh "git clone -b ${BRANCH_NAME} https://github.com/${REPO_URL}/${PROJECT_NAME}.git"
-          dir("${PROJECT_NAME}") {
-            sh "GIT_COMMIT=\$(git rev-parse --short HEAD)"
-          }
-      }
+    // stage('Checkout') {
+    //   steps{
+    //       sh "git clone -b ${BRANCH_NAME} https://github.com/${REPO_URL}/${PROJECT_NAME}.git"
+    //       dir("${PROJECT_NAME}") {
+    //         sh "GIT_COMMIT=\$(git rev-parse --short HEAD)"
+    //       }
+    //   }
       }
       stage('Test') {
         steps{
