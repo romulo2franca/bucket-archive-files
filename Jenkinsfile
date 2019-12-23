@@ -104,7 +104,7 @@ spec:
         dir("${PROJECT_NAME}") {
           container('docker') {
             script{
-              docker.withRegistry('', "${DOCKER_CREDENTIAL}") {
+              docker.withRegistry('', "${DOCKER_REPO_CREDENTIAL}") {
                 sh './scripts/publish.sh'
               }
             }
