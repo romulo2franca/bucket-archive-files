@@ -48,17 +48,17 @@ podTemplate(label: 'jenkins-build-node', containers: [
   node('jenkins-build-node') {
     stage('Test') {
         sh 'git clone -b master https://github.com/romulo2franca/bucket-archive-files.git'
-        sh 'ls'
-        dir('bucket-archive-files/scripts')
-        sh 'cat test.sh'
-        // sh ''
-        // sh 'test.sh'
+        dir('bucket-archive-files/scripts') {
+          sh 'ls'
+          sh './test.sh'
+        }
+
     }
-    stage('Build') {
-      dir("scripts") {
-        sh 'build.sh'
-      }
-    }
+    // stage('Build') {
+    //   dir("scripts") {
+    //     sh 'build.sh'
+    //   }
+    // }
     stage('Check running containers') {
       container('docker') {
         // example to show you can run docker commands when you mount the socket
