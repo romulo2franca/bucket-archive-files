@@ -35,7 +35,7 @@ spec:
       name: "volume-0"
       readOnly: false
   - name: kube
-    image: ubuntu
+    image: romulo2franca/envsubst
     command:
     - cat
     tty: true
