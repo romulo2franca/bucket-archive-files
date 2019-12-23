@@ -141,23 +141,23 @@ spec:
           }
       }
       }
-      // stage('Test') {
-      //   dir(${PROJECT_NAME}) {
-      //     container('node') {
-      //       sh './scripts/test.sh'
-      //     }
-      //   }
-      // }
-      // stage('Build') {
-      //   when {
-      //     branch 'master'
-      //   }
-      //   dir(${PROJECT_NAME}) {
-      //     container('docker') {
-      //       sh './scripts/build.sh'
-      //     }
-      //   }
-      // }
+      stage('Test') {
+        dir("${PROJECT_NAME}") {
+          container('node') {
+            sh './scripts/test.sh'
+          }
+        }
+      }
+      stage('Build') {
+        when {
+          branch 'master'
+        }
+        dir("${PROJECT_NAME}") {
+          container('docker') {
+            sh './scripts/build.sh'
+          }
+        }
+      }
       // stage('Publish') {
       //   when {
       //     branch 'master' || 'development' || 'production' 
