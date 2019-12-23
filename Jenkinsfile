@@ -51,10 +51,9 @@ podTemplate(label: 'jenkins-build-node', containers: [
         sh 'git clone -b master https://github.com/romulo2franca/bucket-archive-files.git'
     }
     stage('Build') {
-        dir('bucket-archive-files') {
-          sh './scripts/test.sh'
-          sh './scripts/build.sh'
-        }
+      dir('bucket-archive-files') {
+        sh './scripts/test.sh'
+        sh './scripts/build.sh'
       }
     }
     stage('Check running containers') {
