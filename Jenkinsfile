@@ -16,6 +16,7 @@ spec:
     - mountPath: "/var/run/docker.sock"
       name: "volume-0"
       readOnly: false
+
   - name: docker
     image: docker
     command:
@@ -41,8 +42,17 @@ spec:
   - name: "workspace-volume"
     emptyDir:
       medium: ""
-  - name: kubectl
-    image: bitnami/kubectl
+  - name: kube
+    image: bitnami/kube
+    command:
+    - cat
+    tty: true
+    volumeMounts:
+    - mountPath: "/var/run/docker.sock"
+      name: "volume-0"
+      readOnly: false
+  - name: node
+    image: node:alpine
     command:
     - cat
     tty: true
@@ -118,7 +128,7 @@ spec:
       }
       steps{
         dir("${PROJECT_NAME}") {
-          container('kubectl') {
+          container('kube') {
             sh './scripts/deploy.sh dev'
           }
         }
@@ -130,7 +140,7 @@ spec:
       }
       steps{
         dir("${PROJECT_NAME}") {
-          container('kubectl') {
+          container('kube') {
             sh './scripts/deploy.sh stage'
           }
         }
@@ -142,7 +152,7 @@ spec:
       }
       steps{
         dir("${PROJECT_NAME}") {
-          container('kubectl') {
+          container('kube') {
             sh './scripts/deploy.sh prod'
           }
         }
