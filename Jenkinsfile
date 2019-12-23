@@ -48,9 +48,9 @@ podTemplate(label: 'jenkins-build-node', containers: [
   node('jenkins-build-node') {
     stage('Test') {
       dir("scripts") {
-        sh 'ls'
-        sh 'chmod +x *.sh'
-        sh 'test.sh'
+        sh 'ls >> echo'
+        // sh 'chmod +x *.sh'
+        // sh 'test.sh'
       }
     }
     stage('Build') {
