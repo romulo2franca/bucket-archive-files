@@ -135,7 +135,7 @@ spec:
       }
       steps{
         dir("${PROJECT_NAME}") {
-          container('kube') {
+          container('node') {
             sh './scripts/deploy.sh prod'
           }
         }
