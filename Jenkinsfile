@@ -37,26 +37,110 @@
 //     }
 // }
 
-podTemplate(label: 'jenkins-build-node', containers: [
-    containerTemplate(name: 'git', image: 'alpine/git', ttyEnabled: true, command: 'cat'),
-    containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
-    containerTemplate(name: 'node', image: 'node:alpine', ttyEnabled: true, command: 'cat'),
-  ],
-  volumes: [
-    hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
-  ]
-  ) {
-  node('jenkins-build-node') {
-    withEnv(['PROJECT_NAME=bucket-archive-files','REPO_URL=romulo2franca']) {
-      stage('Checkout') {
-          print(PROJECT_NAME)
+// podTemplate(label: 'jenkins-build-node', containers: [
+//     containerTemplate(name: 'git', image: 'alpine/git', ttyEnabled: true, command: 'cat'),
+//     containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
+//     containerTemplate(name: 'node', image: 'node:alpine', ttyEnabled: true, command: 'cat'),
+//   ],
+//   volumes: [
+//     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
+//   ]
+//   ) {
+//   node('jenkins-build-node') {
+//     withEnv(['PROJECT_NAME=bucket-archive-files','REPO_URL=romulo2franca']) {
+//       stage('Checkout') {
+//           sh "git clone -b ${BRANCH_NAME} https://github.com/${REPO_URL}/${PROJECT_NAME}.git"
+//           dir(${PROJECT_NAME}) {
+//             sh "GIT_COMMIT=\$(git rev-parse --short HEAD)"
+//           }
+//       }
+//       stage('Test') {
+//         dir(${PROJECT_NAME}) {
+//           container('node') {
+//             sh './scripts/test.sh'
+//           }
+//         }
+//       }
+//       stage('Build') {
+//         if(BRANCH_NAME == 'development' || "master" ||)
+//         dir(${PROJECT_NAME}) {
+//           container('docker') {
+//             sh './scripts/build.sh'
+//           }
+//         }
+//       }
+//       stage('Publish') {
+//         when {
+//           branch 'master' || 'development' || 'production' 
+//         }
+//         dir(${${PROJECT_NAME}}) {
+//           container('docker') {
+//             sh './scripts/publish.sh'
+//           }
+//         }
+//       }
+//     }
+//   }
+// }
+pipeline {
+  agent {
+    kubernetes {
+      yaml """
+metadata:
+  labels:
+    jenkins: slave
+spec:
+  containers:
+  - name: git
+    image: alpine/git
+    command:
+    - cat
+    tty: true
+    volumeMounts:
+    - mountPath: "/var/run/docker.sock"
+      name: "volume-0"
+      readOnly: false
+  - name: docker
+    image: docker
+    command:
+    - cat
+    tty: true
+    volumeMounts:
+    - mountPath: "/var/run/docker.sock"
+      name: "volume-0"
+      readOnly: false
+  - name: node
+    image: node:alpine
+    command:
+    - cat
+    tty: true
+    volumeMounts:
+    - mountPath: "/var/run/docker.sock"
+      name: "volume-0"
+      readOnly: false
+  volumes:
+  - name: "volume-0"
+    hostPath:
+      path: "/var/run/docker.sock"
+  - name: "workspace-volume"
+    emptyDir:
+      medium: ""
+"""
+    }
+  }
+  environment {
+    REPO_URL = 'romulo2franca'
+    PROJECT_NAME = 'bucket-archive-files'
+  }
+  stages{
+    stage('Checkout') {
           sh "git clone -b ${BRANCH_NAME} https://github.com/${REPO_URL}/${PROJECT_NAME}.git"
-          dir(PROJECT_NAME) {
+          dir(${PROJECT_NAME}) {
             sh "GIT_COMMIT=\$(git rev-parse --short HEAD)"
           }
       }
       stage('Test') {
-        dir(PROJECT_NAME) {
+        dir(${PROJECT_NAME}) {
           container('node') {
             sh './scripts/test.sh'
           }
@@ -64,9 +148,9 @@ podTemplate(label: 'jenkins-build-node', containers: [
       }
       stage('Build') {
         when {
-          branch 'master' || 'development' || 'production' 
+          branch 'master'
         }
-        dir(PROJECT_NAME) {
+        dir(${PROJECT_NAME}) {
           container('docker') {
             sh './scripts/build.sh'
           }
@@ -76,7 +160,7 @@ podTemplate(label: 'jenkins-build-node', containers: [
         when {
           branch 'master' || 'development' || 'production' 
         }
-        dir(${PROJECT_NAME}) {
+        dir(${${PROJECT_NAME}}) {
           container('docker') {
             sh './scripts/publish.sh'
           }
@@ -84,4 +168,3 @@ podTemplate(label: 'jenkins-build-node', containers: [
       }
     }
   }
-}
