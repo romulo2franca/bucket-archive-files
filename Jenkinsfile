@@ -85,7 +85,7 @@ spec:
         steps{
           dir("${PROJECT_NAME}") {
             container('docker') {
-              scripts{
+              script{
                 docker.withRegistry('', 'dockerhub'){
                   sh './scripts/publish.sh'
                 }
