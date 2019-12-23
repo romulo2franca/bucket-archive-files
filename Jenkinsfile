@@ -35,7 +35,7 @@ spec:
       name: "volume-0"
       readOnly: false
   - name: kube
-    image: bitnami/kubectl:latest
+    image: alpine:latest
     command:
     - cat
     tty: true
@@ -135,7 +135,7 @@ spec:
       }
       steps{
         dir("${PROJECT_NAME}") {
-          container('node') {
+          container('kube') {
             sh './scripts/deploy.sh prod'
           }
         }
