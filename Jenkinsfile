@@ -48,7 +48,7 @@ podTemplate(label: 'jenkins-build-node', containers: [
   ) {
   node('jenkins-build-node') {
     stage('Checkout') {
-        sh 'git clone -b '${BRANCH_NAME}' https://github.com/romulo2franca/bucket-archive-files.git'
+        sh "git clone -b ${BRANCH_NAME} https://github.com/romulo2franca/bucket-archive-files.git"
     }
     stage('Build') {
       dir('bucket-archive-files') {
