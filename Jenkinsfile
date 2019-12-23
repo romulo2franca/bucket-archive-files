@@ -46,31 +46,42 @@ podTemplate(label: 'jenkins-build-node', containers: [
     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
   ]
   ) {
+    environment {
+        PROJECT_NAME = 'bucket-archive-files'
+        REPO_URL    = 'romulo2franca'
+    }
   node('jenkins-build-node') {
     stage('Checkout') {
-        sh "git clone -b ${BRANCH_NAME} https://github.com/romulo2franca/bucket-archive-files.git"
+        sh "git clone -b ${BRANCH_NAME} https://github.com/${REPO_URL}/${PROJECT_NAME}.git"
+        dir(${PROJECT_NAME}) {
+          sh "GIT_COMMIT=$(git rev-parse --short HEAD)"
+        }
     }
-    stage('Build') {
-      dir('bucket-archive-files') {
+    stage('Test') {
+      dir(${PROJECT_NAME}) {
         container('node') {
-        sh './scripts/test.sh'
-        // sh './scripts/build.sh'
+          sh './scripts/test.sh'
         }
       }
     }
-    stage('Check running containers') {
-      container('docker') {
-        // example to show you can run docker commands when you mount the socket
-        sh 'hostname'
-        sh 'hostname -i'
-        sh 'docker ps'
+    stage('Build') {
+      when {
+        branch 'master' || branch 'development' || branch 'production' 
+      }
+      dir(${PROJECT_NAME}) {
+        container('docker') {
+          sh './scripts/build.sh'
+        }
       }
     }
-    stage('Clone repository') {
-      container('git') {
-        sh 'whoami'
-        sh 'hostname -i'
-        sh 'git clone -b master https://github.com/lvthillo/hello-world-war.git'
+    stage('Publish') {
+      when {
+        branch 'master' || branch 'development' || branch 'production' 
+      }
+      dir(${PROJECT_NAME}) {
+        container('docker') {
+          sh './scripts/publish.sh'
+        }
       }
     }
   }
