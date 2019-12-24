@@ -57,7 +57,7 @@ spec:
     PROJECT_NAME = 'bucket-archive-files' // Nome do projeto. Utilizado tanto no git como no Docker Hub
     DOCKER_REPO_URL = 'romulo2franca' // URL do projeto. como utilizei minha conta no Docker Hub, só precisei informar o nome do usuário.
     DOCKER_REPO_CREDENTIAL = 'dockerhub' // ID da credencial do Docker Hub criada no Jenkins. Necessário para .
-    KUBECONFIG = './k8s/config' // ID da credencial do cluster K8S criada no Jenkins. Necessário para autenticar no cluster e executar o deploy.
+    KUBECONFIG = './k8s/config' // Caminho da configuração do kubernetes.
   }
   stages{
     stage('Git Clone') {
@@ -79,7 +79,11 @@ spec:
     }
     stage('Build') {
       when {
-        branch 'master'
+        anyOf {
+          branch 'development'
+          branch 'release'
+          branch 'master'
+        }
       }
       steps {
         dir("${PROJECT_NAME}") {
@@ -91,8 +95,11 @@ spec:
     }
     stage('Publish') {
       when {
-        branch 'master' 
-      }
+        anyOf {
+          branch 'development'
+          branch 'release'
+          branch 'master'
+        }
       steps{
         dir("${PROJECT_NAME}") {
           container('docker') {
