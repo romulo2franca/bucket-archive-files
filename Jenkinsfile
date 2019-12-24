@@ -97,6 +97,7 @@ spec:
           branch 'release'
           branch 'master'
         }
+      }
       steps{
         dir("${PROJECT_NAME}") {
           container('docker') {
