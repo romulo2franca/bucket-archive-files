@@ -14,7 +14,7 @@ spec:
     tty: true
     volumeMounts:
     - mountPath: "/var/run/docker.sock"
-      name: "volume-0"
+      name: "volume-docker"
       readOnly: false
   - name: docker
     image: docker:latest
@@ -23,7 +23,7 @@ spec:
     tty: true
     volumeMounts:
     - mountPath: "/var/run/docker.sock"
-      name: "volume-0"
+      name: "volume-docker"
       readOnly: false
   - name: node
     image: node:alpine
@@ -32,7 +32,7 @@ spec:
     tty: true
     volumeMounts:
     - mountPath: "/var/run/docker.sock"
-      name: "volume-0"
+      name: "volume-docker"
       readOnly: false
   - name: kube
     image: romulo2franca/kubectl
@@ -41,15 +41,12 @@ spec:
     tty: true
     volumeMounts:
     - mountPath: "/var/run/docker.sock"
-      name: "volume-0"
+      name: "volume-docker"
       readOnly: false
   volumes:
-  - name: "volume-0"
+  - name: "volume-docker"
     hostPath:
       path: "/var/run/docker.sock"
-  - name: "workspace-volume"
-    emptyDir:
-      medium: ""
 """
     }
   }
@@ -112,9 +109,13 @@ spec:
         }
       }
     }
-    stage('Test in Dev') {
+    stage('Test in Dev?') {
       when {
         branch 'development' 
+      }
+      input {
+        message "Test in development environment?"
+        id "simple-input"
       }
       steps{
         dir("${PROJECT_NAME}") {
